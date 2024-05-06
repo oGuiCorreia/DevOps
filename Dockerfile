@@ -1,5 +1,5 @@
-# Use a imagem base do Python
-FROM python:3.9-slim
+# Use uma imagem base do Ubuntu
+FROM ubuntu:latest
 
 # Atualize o índice de pacotes e instale as dependências necessárias
 RUN apt-get update && \
@@ -9,22 +9,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # Baixe e instale o OWASP ZAP
-RUN wget -q -O - https://raw.githubusercontent.com/zaproxy/zap-admin/master/ZapVersions.xml | grep -oP 'http.*?weekly[^<]+' | xargs wget -O /tmp/zap.tar.gz && \
-    tar -xzf /tmp/zap.tar.gz -C /tmp && \
-    mv /tmp/ZAP* /zap && \
-    rm -rf /tmp/*
+RUN wget -q -O - https://github.com/zaproxy/zaproxy/releases/download/v2.10.0/ZAP_2.10.0_Linux.tar.gz | tar -xzf - -C /opt
 
-# Configure o OWASP ZAP e instale as dependências Python
-RUN chmod +x /zap/zap.sh && \
-    /zap/zap.sh -daemon -port 8083 && \
-    pip install --upgrade pip && \
-    pip install python-owasp-zap-v2.4
-
-# Copie o arquivo index.html para o diretório padrão do Nginx
-COPY index.html /usr/share/nginx/html
-
-# Exponha a porta 8083 para o OWASP ZAP e a porta 80 para o Nginx
-EXPOSE 8083 80
-
-# Comando de inicialização padrão do contêiner Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Defina o comando de entrada padrão para iniciar o OWASP ZAP
+ENTRYPOINT ["/opt/ZAP_2.10.0/zap.sh"]
