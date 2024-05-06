@@ -29,6 +29,9 @@ jobs:
           check_css: true
         continue-on-error: true
 
+      - name: Run OWASP ZAP SAST scan
+        run: docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-weekly zap-baseline.py -t http://localhost:8083 -J zap_report.json -r zap_report.html || true
+
 
   deploy:
     runs-on: ubuntu-latest
@@ -49,3 +52,4 @@ jobs:
           
       - name: Push Docker image to registry
         run: docker push oguilhermecorreia/webapp:latest
+
