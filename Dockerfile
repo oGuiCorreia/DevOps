@@ -1,15 +1,11 @@
-# Use uma imagem base do Ubuntu
-FROM ubuntu:latest
+# Use a imagem base do OWASP ZAP Stable
+FROM zaproxy/zap-stable
 
-# Atualize o índice de pacotes e instale as dependências necessárias
-RUN apt-get update && \
-    apt-get install -y \
-    openjdk-11-jre-headless \
-    wget \
-    && rm -rf /var/lib/apt/lists/*
+# Copie o arquivo index.html para o diretório padrão do Nginx
+COPY index.html /usr/share/nginx/html
 
-# Baixe e instale o OWASP ZAP
-RUN wget -q -O - https://github.com/zaproxy/zaproxy/releases/download/v2.10.0/ZAP_2.10.0_Linux.tar.gz | tar -xzf - -C /opt
+# Exponha a porta 8080 para o OWASP ZAP e a porta 80 para o Nginx
+EXPOSE 8080 80
 
-# Defina o comando de entrada padrão para iniciar o OWASP ZAP
-ENTRYPOINT ["/opt/ZAP_2.10.0/zap.sh"]
+# Comando de inicialização padrão do contêiner Nginx
+CMD ["nginx", "-g", "daemon off;"]
