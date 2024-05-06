@@ -43,6 +43,9 @@ jobs:
         with:
           username: ${{ secrets.USER }}  
           password: ${{ secrets.PASSWD }}
+
+      - name: Build Docker image for deploy
+        run: docker build -t oguilhermecorreia/webapp:latest .
           
       - name: Push Docker image to registry
         run: docker push oguilhermecorreia/webapp:latest
