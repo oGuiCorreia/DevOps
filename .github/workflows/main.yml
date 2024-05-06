@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches: [main]
-
+    
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,13 +18,15 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Run SAST
-        uses: github/codeql-action@v2
+      - name: Proof HTML
+        uses: anishathalye/proof-html@v2.1.2
         with:
-          languages: javascript,html
+          directory: ./DevOps
+          check_html: true
+          check_css: true
+          check_links: true
 
   deploy:
     runs-on: ubuntu-latest
@@ -42,4 +44,3 @@ jobs:
           
       - name: Push Docker image to registry
         run: docker push oguilhermecorreia/webapp:latest
-
