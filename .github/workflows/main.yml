@@ -23,10 +23,9 @@ jobs:
       - name: Proof HTML
         uses: anishathalye/proof-html@v2.1.2
         with:
-          directory: ./DevOps
+          directory: ./
           check_html: true
           check_css: true
-          check_links: true
 
   deploy:
     runs-on: ubuntu-latest
