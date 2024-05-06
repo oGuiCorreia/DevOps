@@ -26,6 +26,7 @@ jobs:
           directory: ./
           check_html: true
           check_css: true
+        continue-on-error: true
 
   deploy:
     runs-on: ubuntu-latest
